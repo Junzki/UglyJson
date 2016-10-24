@@ -31,11 +31,33 @@ test_parse_null()
 	EXPECT_EQ_INT(UGLY_NULL, ugly_get_type(&val));
 }
 
+static void
+test_parse_true()
+{
+	ugly_value val;
+
+	val.type = UGLY_TRUE;
+	EXPECT_EQ_INT(UGLY_PARSE_OK, ugly_loads(&val, "true"));
+	EXPECT_EQ_INT(UGLY_TRUE, ugly_get_type(&val));
+}
+
+static void
+test_parse_false()
+{
+	ugly_value val;
+
+	val.type = UGLY_TRUE;
+	EXPECT_EQ_INT(UGLY_PARSE_OK, ugly_loads(&val, "false"));
+	EXPECT_EQ_INT(UGLY_FALSE, ugly_get_type(&val));
+}
+
 
 static void
 test_parse()
 {
 	test_parse_null();
+	test_parse_true();
+	test_parse_false();
 }
 
 
