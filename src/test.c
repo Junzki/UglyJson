@@ -21,43 +21,21 @@ static int test_passed = 0;
 
 #define EXPECT_EQ_INT(expect, actual) EXPECT_EQ_BASE((expect) == (actual), expect, actual, "%d")
 
-static void
-test_parse_null()
-{
-	ugly_value val;
-
-	val.type = UGLY_TRUE;
-	EXPECT_EQ_INT(UGLY_PARSE_OK, ugly_loads(&val, "null"));
-	EXPECT_EQ_INT(UGLY_NULL, ugly_get_type(&val));
-}
-
-static void
-test_parse_true()
-{
-	ugly_value val;
-
-	val.type = UGLY_TRUE;
-	EXPECT_EQ_INT(UGLY_PARSE_OK, ugly_loads(&val, "true"));
-	EXPECT_EQ_INT(UGLY_TRUE, ugly_get_type(&val));
-}
-
-static void
-test_parse_false()
-{
-	ugly_value val;
-
-	val.type = UGLY_TRUE;
-	EXPECT_EQ_INT(UGLY_PARSE_OK, ugly_loads(&val, "false"));
-	EXPECT_EQ_INT(UGLY_FALSE, ugly_get_type(&val));
-}
-
 
 static void
 test_parse()
 {
-	test_parse_null();
-	test_parse_true();
-	test_parse_false();
+    char* values[] = {"true", "false", "null"};
+    ugly_type result_types[] = {UGLY_TRUE, UGLY_FALSE, UGLY_NULL};
+    int index = 0;
+    int tests = 3;
+
+    for (index=0; index < tests; ++index)
+    {
+        ugly_value val;
+        EXPECT_EQ_INT(UGLY_PARSE_OK, ugly_loads(&val, values[index]));
+        EXPECT_EQ_INT(result_types[index], ugly_get_type(&val));
+    }
 }
 
 

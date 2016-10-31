@@ -12,9 +12,6 @@
 		&& m[4] == c4
 
 static void ugly_parse_ws(ugly_context *);
-static int ugly_parse_null(ugly_context *, ugly_value *);
-static int ugly_parse_true(ugly_context *, ugly_value *);
-static int ugly_parse_false(ugly_context *, ugly_value *);
 static int ugly_parse_value(ugly_context *, ugly_value *);
 
 
@@ -44,19 +41,32 @@ static int
 ugly_parse_value(ugly_context *cxt,
 				 ugly_value *val)
 {
-	switch(*cxt->json)
-	{
-	case 'n':
-		return ugly_parse_null(cxt, val);
-	case 't':
-		return ugly_parse_true(cxt, val);
-	case 'f':
-		return ugly_parse_false(cxt, val);
-	case '\0':
-		return UGLY_PARSE_EXPECT_VALUE;
-	default:
-		return UGLY_PARSE_INVALID_VALUE;
-	}
+    char *c = cxt->json;
+    if ('n' == *c && ugly_str4cmp(c, 'n', 'u', 'l', 'l'))
+    {
+        cxt->json += 4;
+        val->type = UGLY_NULL;
+    }
+    else if ('t' == *c && ugly_str4cmp(c, 't', 'r', 'u', 'e'))
+    {
+        cxt->json += 4;
+        val->type = UGLY_TRUE;
+    }
+    else if ('f' == *c && ugly_str5cmp(c, 'f', 'a', 'l', 's', 'e'))
+    {
+        cxt->json += 5;
+        val->type = UGLY_FALSE;
+    }
+    else if ('\0' == *c)
+    {
+        return UGLY_PARSE_EXPECT_VALUE;
+    }
+    else
+    {
+        return UGLY_PARSE_INVALID_VALUE;
+    }
+
+    return UGLY_PARSE_OK;
 }
 
 
@@ -67,43 +77,4 @@ ugly_parse_ws(ugly_context *cxt)
 	while (' ' == *p || '\t' == *p || '\n' == *p || '\r' == *p)
 		++p;
 	cxt->json = (char *)p;
-}
-
-
-static int
-ugly_parse_null(ugly_context *cxt,
-				ugly_value *val)
-{
-	if (!(ugly_str4cmp(cxt->json, 'n', 'u', 'l', 'l')))
-		 return UGLY_PARSE_INVALID_VALUE;
-
-	cxt->json += 4;
-	val->type = UGLY_NULL;
-	return UGLY_PARSE_OK;
-}
-
-
-static int
-ugly_parse_true(ugly_context *cxt,
-				ugly_value *val)
-{
-	if (!(ugly_str4cmp(cxt->json, 't', 'r', 'u', 'e')))
-		return UGLY_PARSE_INVALID_VALUE;
-
-	cxt->json += 4;
-	val->type = UGLY_TRUE;
-	return UGLY_PARSE_OK;
-}
-
-
-static int
-ugly_parse_false(ugly_context *cxt,
-				 ugly_value *val)
-{
-	if (!(ugly_str5cmp(cxt->json, 'f', 'a', 'l', 's', 'e')))
-		return UGLY_PARSE_INVALID_VALUE;
-
-	cxt->json += 5;
-	val->type = UGLY_FALSE;
-	return UGLY_PARSE_OK;
 }
