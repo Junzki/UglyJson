@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <assert.h>
 #include "uglyjson.h"
+#include "number.h"
 
 #define ugly_str4cmp(m, c0, c1, c2, c3)								\
 	*(uint32_t*) m == ((c3 << 24) | (c2 << 16) | (c1 << 8) | c0)
@@ -57,6 +58,17 @@ ugly_parse_value(ugly_context *cxt,
         cxt->json += 5;
         val->type = UGLY_FALSE;
     }
+	else if (is_number(c))
+	{
+		char* num_end = numpos(c);
+		char* end;
+		if (NULL == num_end)
+			return UGLY_PARSE_INVALID_VALUE;
+
+		val->value = strtod(c, &end);
+		cxt->json = end;
+		val->type = UGLY_NUMBER;
+	}
     else if ('\0' == *c)
     {
         return UGLY_PARSE_EXPECT_VALUE;
@@ -78,3 +90,5 @@ ugly_parse_ws(ugly_context *cxt)
 		++p;
 	cxt->json = (char *)p;
 }
+
+

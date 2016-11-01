@@ -22,6 +22,7 @@ enum {
 
 typedef struct {
 	ugly_type type;
+	double value;
 } ugly_value;
 
 typedef struct {
