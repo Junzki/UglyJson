@@ -7,5 +7,11 @@ if (CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
 endif()
 
 add_library(uglyjson uglyjson.c)
+add_library(number number.c)
+
+include_directories(include)
+
 add_executable(uglyjson_test test.c)
-target_link_libraries(uglyjson_test uglyjson)
+add_executable(ugly_number_test test_digit.c)
+target_link_libraries(uglyjson_test uglyjson number)
+target_link_libraries(ugly_number_test number)

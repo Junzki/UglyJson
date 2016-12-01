@@ -1,25 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "include/test.h"
 #include "uglyjson.h"
+#include "number.h"
 
 static int test_status = EXIT_SUCCESS;
 static int test_count = 0;
 static int test_passed = 0;
 
-#define EXPECT_EQ_BASE(equality, expect, actual, format)				\
-	do {																\
-		++test_count;													\
-		if (equality)													\
-			++test_passed;												\
-		else {															\
-			fprintf(stderr, "%s:%d: expect: " format " actual: " format "\n", __FILE__, __LINE__, expect, actual); \
-			test_status = EXIT_FAILURE;									\
-		}																\
-	}																	\
-	while (0);															\
+static void
+test_parse_number()
+{
+	char *values[] = {"1", "-1", "0.1", "1.234", "-1.1234"};
+	double expected[] = {1.0, -1.0, 0.1, 1.234, -1.1234};
+	int index = 0;
+	int tests = 5;
 
-#define EXPECT_EQ_INT(expect, actual) EXPECT_EQ_BASE((expect) == (actual), expect, actual, "%d")
+	for (index = 0; index < tests; ++index)
+	{
+		ugly_value val;
+		EXPECT_EQ_INT(UGLY_PARSE_OK, ugly_loads(&val, values[index]));
+		EXPECT_EQ_INT(UGLY_NUMBER, val.type);
+		EXPECT_EQ_DOUBLE(expected[index], val.value);
+	}
+}
 
 
 static void
@@ -36,6 +41,8 @@ test_parse()
         EXPECT_EQ_INT(UGLY_PARSE_OK, ugly_loads(&val, values[index]));
         EXPECT_EQ_INT(result_types[index], ugly_get_type(&val));
     }
+
+	test_parse_number();
 }
 
 

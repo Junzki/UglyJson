@@ -58,7 +58,7 @@ ugly_parse_value(ugly_context *cxt,
         cxt->json += 5;
         val->type = UGLY_FALSE;
     }
-	else if (is_number(c))
+	else if (1 == is_number(c))
 	{
 		char* num_end = numpos(c);
 		char* end;

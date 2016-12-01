@@ -5,27 +5,22 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h> /* Macros of boolean types. */
 
 #include "number.h"
-
-bool is_digit(char*);
-bool is_plus(char*);
-bool is_minus(char*);
-bool is_exp(char*);
-bool is_dot(char*);
-
 
 int
 is_number(char* c)
 {
-	if (is_digit(c) && '0' != *c && is_digit(c+1))
+	if (is_digit(c) && '0' != *c)
 		return 1;
 
 	else if ('0' == *c && is_dot(c+1))
 		return 1;
 
 	else if (is_dot(c))
+		return 1;
+
+	else if (is_minus(c) && (is_digit(c+1) || is_dot(c+1)))
 		return 1;
 
 	return 0;
@@ -36,11 +31,9 @@ numpos(const char* number_start)
 {
 	char* c;
 	int index;
-	int index_limit;
 	
 	c = (char*)number_start;
 	index = 0;
-	index_limit = 0;
 
 	if (!(is_digit(c) || is_minus(c)))
 		return NULL;
@@ -70,7 +63,7 @@ numpos(const char* number_start)
 
 bool
 is_digit(char* c) {
-	if ('0' >= *c && '9' <= *c)
+	if ('0' <= *c && '9' >= *c)
 		return true;
 	else
 		return false;
