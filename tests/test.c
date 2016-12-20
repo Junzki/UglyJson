@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "include/test.h"
-#include "uglyjson.h"
-#include "number.h"
+#include "test.h"
+#include "../src/uglyjson.h"
+#include "../src/number.h"
 
 static int test_status = EXIT_SUCCESS;
 static int test_count = 0;

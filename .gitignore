@@ -34,3 +34,8 @@
 
 # CMake
 build/
+
+# Editor cached files
+*~
+\#*
+.\#*

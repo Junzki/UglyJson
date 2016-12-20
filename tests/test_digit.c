@@ -5,8 +5,8 @@
 #include <stdbool.h>
 #endif
 
-#include "include/test.h"
-#include "number.h"
+#include "test.h"
+#include "../src/number.h"
 
 static int test_status = EXIT_SUCCESS;
 static int test_count = 0;
